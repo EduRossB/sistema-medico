@@ -19,7 +19,6 @@ export class Paciente extends BaseEntity {
   @OneToOne(
     () => HistoriaClinica,
     (historiaClinica) => historiaClinica.paciente,
-    { cascade: true },
   )
   historiaClinica: HistoriaClinica;
 }

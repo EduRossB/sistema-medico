@@ -20,15 +20,17 @@ export class ConsultasService {
   async createConsulta(createConsultaDto): Promise<any> {
     const historiaClinica = await this.HistoriaClinicaRepository.findOne({
       where: { id: createConsultaDto.historiaClinicaId },
-      relations: ['consultas'],
     });
+
     if (!historiaClinica) {
       throw new Error('Historia clinica no encontrada');
     }
+
     const consulta = this.ConsultaRepository.create(createConsultaDto);
     consulta['historiaClinica'] = historiaClinica;
 
     const savedConsulta = await this.ConsultaRepository.save(consulta);
+
     return savedConsulta;
   }
 

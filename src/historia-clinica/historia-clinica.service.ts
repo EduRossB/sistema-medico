@@ -30,15 +30,17 @@ export class HistoriaClinicaService {
     return await this.historiaClinicaRepository.softDelete(id);
   }
 
-  async getHistoriaClinicaById(id: number): Promise<any> {
-    try {
-      return await this.historiaClinicaRepository.findOne({
-        where: { id },
-        relations: ['consultas'],
-      });
-    } catch (error) {
-      return 'No encontrado' + error;
+  async getHistoriaClinicaById(id: number): Promise<HistoriaClinica> {
+    const historiaClinica = await this.historiaClinicaRepository.findOne({
+      where: { id },
+      relations: ['consultas', 'practicas'],
+    });
+
+    if (!historiaClinica) {
+      throw new Error('Historia clinica no encontrada');
     }
+
+    return historiaClinica;
   }
 
   async updateHistoriaClinica(

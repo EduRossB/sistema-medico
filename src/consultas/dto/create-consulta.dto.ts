@@ -1,8 +1,8 @@
 export class CreateConsultaDto {
-  idPaciente?: string;
-  medico?: string;
-  fechaRealizacion?: string;
-  motivo?: string;
-  diagnosticoEnfermedad?: string;
-  diagnosticoConfirmado?: boolean;
+  medico: number;
+  fechaRealizacion: string;
+  motivo: string;
+  diagnosticoEnfermedad: string;
+  diagnosticoConfirmado: boolean;
+  historiaClinica: number;
 }

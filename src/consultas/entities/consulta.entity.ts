@@ -25,5 +25,6 @@ export class Consulta extends BaseEntity {
     () => HistoriaClinica,
     (historiaClinica) => historiaClinica.consultas,
   )
+  @JoinColumn({ name: 'HistoriaClinicaID' })
   historiaClinica: HistoriaClinica;
 }
