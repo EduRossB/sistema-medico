@@ -1,7 +1,8 @@
 export class CreatePracticaDto {
+  medico: number;
   fechaRealizacion: string;
   duracion: number;
-  motivo: string;
   complicaciones: string;
   resultadoFinal: string;
+  historiaClinica: number;
 }

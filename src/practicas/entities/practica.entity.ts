@@ -5,12 +5,12 @@ import { BaseEntity } from 'src/common/base-entity';
 
 @Entity()
 export class Practica extends BaseEntity {
-  @ManyToOne(() => Medico, (medico) => medico.numeroMatricula)
+  @ManyToOne(() => Medico, (medico) => medico)
   @JoinColumn({ name: 'DoctorID' })
   medico: Medico;
 
   @Column()
-  fechaRealizacion: Date;
+  fechaRealizacion: string;
 
   @Column()
   duracion: number;
@@ -25,5 +25,6 @@ export class Practica extends BaseEntity {
     () => HistoriaClinica,
     (historiaClinica) => historiaClinica.practicas,
   )
+  @JoinColumn({ name: 'HistoriaClinicaID' })
   historiaClinica: HistoriaClinica;
 }
