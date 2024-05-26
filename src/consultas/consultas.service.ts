@@ -13,8 +13,8 @@ export class ConsultasService {
     @InjectRepository(HistoriaClinica)
     private readonly HistoriaClinicaRepository: Repository<HistoriaClinica>,
   ) {}
-  getAllConsultas() {
-    return this.ConsultaRepository.find();
+  async getAllConsultas() {
+    return await this.ConsultaRepository.find();
   }
 
   async createConsulta(createConsultaDto): Promise<any> {
@@ -32,12 +32,12 @@ export class ConsultasService {
     return savedConsulta;
   }
 
-  deleteConsulta(id: number) {
-    this.ConsultaRepository.delete(id);
+  async deleteConsulta(id: number) {
+    return await this.ConsultaRepository.softDelete(id);
   }
 
-  getConsultaById(id: number): any {
-    this.ConsultaRepository.findOne({ where: { id } });
+  async getConsultaById(id: number): Promise<Consulta> {
+    return await this.ConsultaRepository.findOne({ where: { id } });
   }
   async updateConsulta(
     id: number,

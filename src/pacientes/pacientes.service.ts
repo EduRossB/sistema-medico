@@ -16,8 +16,10 @@ export class PacientesService {
     private readonly historiaClinicaRepository: Repository<HistoriaClinica>,
   ) {}
 
-  getAllPaciente() {
-    return this.pacienteRepository.find({ relations: ['historiaClinica'] });
+  async getAllPaciente() {
+    return await this.pacienteRepository.find({
+      relations: ['historiaClinica'],
+    });
   }
 
   async createPaciente(createPatientDto: CreatePacienteDto): Promise<Paciente> {
@@ -30,19 +32,16 @@ export class PacientesService {
     const historiaClinica = this.historiaClinicaRepository.create({
       paciente: pacienteGuardado,
     });
-
-  
-
     await this.historiaClinicaRepository.save(historiaClinica);
     return pacienteGuardado;
   }
 
-  deletePaciente(id: number) {
-    this.pacienteRepository.delete(id);
+  async deletePaciente(id: number) {
+    return await this.pacienteRepository.softDelete(id);
   }
 
-  getPacienteById(id: number): Promise<Paciente> {
-    return this.pacienteRepository.findOne({
+  async getPacienteById(id: number): Promise<Paciente> {
+    return await this.pacienteRepository.findOne({
       where: { id },
       relations: ['historiaClinica'],
     });
@@ -73,6 +72,6 @@ export class PacientesService {
     };
 
     console.log(updatePaciente);
-    return this.pacienteRepository.save(updatePaciente);
+    return await this.pacienteRepository.save(updatePaciente);
   }
 }

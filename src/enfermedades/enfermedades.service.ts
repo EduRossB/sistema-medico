@@ -11,18 +11,18 @@ export class EnfermedadesService {
     private readonly enfermedadRepository: Repository<Enfermedades>,
   ) {}
 
-  getAllEnfermedades() {
-    return this.enfermedadRepository.find();
+  async getAllEnfermedades() {
+    return await this.enfermedadRepository.find();
   }
-  createEnfermedades(createEnfermedadesDto) {
+  async createEnfermedades(createEnfermedadesDto) {
     const enfermedad = this.enfermedadRepository.create(createEnfermedadesDto);
-    return this.enfermedadRepository.save(enfermedad);
+    return await this.enfermedadRepository.save(enfermedad);
   }
-  deleteEnfermedades(id: number) {
-    this.enfermedadRepository.delete(id);
+  async deleteEnfermedades(id: number) {
+    return await this.enfermedadRepository.softDelete(id);
   }
-  getEnfermedadesById(id: number): any {
-    return this.enfermedadRepository.findOne({ where: { id } });
+  async getEnfermedadesById(id: number): Promise<Enfermedades> {
+    return await this.enfermedadRepository.findOne({ where: { id } });
   }
 
   async updateEnfermedades(

@@ -12,17 +12,17 @@ export class PracticasService {
     private readonly practicaRepository: Repository<Practica>,
   ) {}
 
-  createPractica(createPracticaDto: CreatePracticaDto) {
+  async createPractica(createPracticaDto: CreatePracticaDto) {
     const practica = this.practicaRepository.create(createPracticaDto);
-    return this.practicaRepository.save(practica);
+    return await this.practicaRepository.save(practica);
   }
 
-  getAllPracticas() {
-    return this.practicaRepository.find();
+  async getAllPracticas() {
+    return await this.practicaRepository.find();
   }
 
-  getPracticaById(id: number) {
-    return this.practicaRepository.findOne({ where: { id } });
+  async getPracticaById(id: number) {
+    return await this.practicaRepository.findOne({ where: { id } });
   }
 
   async updatePractica(id: number, updatePracticaDto: UpdatePracticaDto) {
@@ -31,7 +31,7 @@ export class PracticasService {
       throw new Error('Practica no encontrada');
     }
     const updatedPractica = { ...practica, ...updatePracticaDto };
-    return this.practicaRepository.save(updatedPractica);
+    return await this.practicaRepository.save(updatedPractica);
   }
 
   async deletePractica(id: number) {
@@ -39,6 +39,6 @@ export class PracticasService {
     if (!practica) {
       throw new Error('Practica no encontrada');
     }
-    return this.practicaRepository.remove(practica);
+    return await this.practicaRepository.softDelete(practica);
   }
 }

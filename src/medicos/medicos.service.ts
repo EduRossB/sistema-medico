@@ -11,18 +11,18 @@ export class MedicosService {
     private readonly MedicoRepository: Repository<Medico>,
   ) {}
 
-  getAllMedicos() {
-    return this.MedicoRepository.find();
+  async getAllMedicos() {
+    return await this.MedicoRepository.find();
   }
-  createMedico(createMedicoDto) {
+  async createMedico(createMedicoDto) {
     const Medico = this.MedicoRepository.create(createMedicoDto);
-    return this.MedicoRepository.save(Medico);
+    return await this.MedicoRepository.save(Medico);
   }
-  deleteMedico(id: number) {
-    this.MedicoRepository.delete(id);
+  async deleteMedico(id: number) {
+    return await this.MedicoRepository.softDelete(id);
   }
-  getMedicoById(numeroMatricula: number): any {
-    return this.MedicoRepository.findOne({ where: { numeroMatricula } });
+  async getMedicoById(numeroMatricula: number): Promise<Medico> {
+    return await this.MedicoRepository.findOne({ where: { numeroMatricula } });
   }
 
   async updateMedico(
@@ -36,6 +36,6 @@ export class MedicosService {
       throw new Error('Paciente no encontrado');
     }
     const updatedMedico = { ...Medico, ...updateMedicoDto };
-    return this.MedicoRepository.save(updatedMedico);
+    return await this.MedicoRepository.save(updatedMedico);
   }
 }

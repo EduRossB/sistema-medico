@@ -13,8 +13,10 @@ export class HistoriaClinicaService {
     @InjectRepository(Consulta)
     private readonly ConsultaRepository: Repository<Consulta>,
   ) {}
-  getAllHistoriasClinicas() {
-    return this.historiaClinicaRepository.find({ relations: ['paciente'] });
+  async getAllHistoriasClinicas() {
+    return await this.historiaClinicaRepository.find({
+      relations: ['paciente'],
+    });
   }
 
   async createHistoriaClinica(CreateHistoriaClinicaDto) {
@@ -24,8 +26,8 @@ export class HistoriaClinicaService {
     await this.historiaClinicaRepository.save(historiaClinica);
   }
 
-  deleteHistoriaClinica(id: number) {
-    this.historiaClinicaRepository.delete(id);
+  async deleteHistoriaClinica(id: number) {
+    return await this.historiaClinicaRepository.softDelete(id);
   }
 
   async getHistoriaClinicaById(id: number): Promise<any> {
@@ -53,6 +55,6 @@ export class HistoriaClinicaService {
       historiaClinica,
       updateHistoriaClinicaDto,
     );
-    return this.historiaClinicaRepository.save(updatedHistoriaClinica);
+    return await this.historiaClinicaRepository.save(updatedHistoriaClinica);
   }
 }
