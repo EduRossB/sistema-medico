@@ -1,17 +1,16 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
 import { HistoriaClinica } from 'src/historia-clinica/entities/historia-clinica.entity';
 import { Medico } from 'src/medicos/entities/medico.entity';
+import { BaseEntity } from 'src/common/base-entity';
 
 @Entity()
-export class Consulta {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @ManyToOne(() => Medico, (medico) => medico.practicas)
+export class Consulta extends BaseEntity {
+  @ManyToOne(() => Medico, (medico) => medico)
+  @JoinColumn({ name: 'DoctorID' })
   medico: Medico;
 
   @Column()
-  fechaRealizacion: Date;
+  fechaRealizacion: string;
 
   @Column()
   motivo: string;
@@ -26,5 +25,5 @@ export class Consulta {
     () => HistoriaClinica,
     (historiaClinica) => historiaClinica.consultas,
   )
-  historiaClinica: HistoriaClinica; // Relación muchos a uno con la entidad HistoriaClinica
+  historiaClinica: HistoriaClinica;
 }

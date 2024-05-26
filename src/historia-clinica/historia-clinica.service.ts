@@ -1,26 +1,58 @@
 import { Injectable } from '@nestjs/common';
-import { CreateHistoriaClinicaDto } from './dto/create-historia-clinica.dto';
 import { UpdateHistoriaClinicaDto } from './dto/update-historia-clinica.dto';
+import { HistoriaClinica } from './entities/historia-clinica.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Consulta } from 'src/consultas/entities/consulta.entity';
 
 @Injectable()
 export class HistoriaClinicaService {
-  create(createHistoriaClinicaDto: CreateHistoriaClinicaDto) {
-    return 'This action adds a new historiaClinica';
+  constructor(
+    @InjectRepository(HistoriaClinica)
+    private readonly historiaClinicaRepository: Repository<HistoriaClinica>,
+    @InjectRepository(Consulta)
+    private readonly ConsultaRepository: Repository<Consulta>,
+  ) {}
+  getAllHistoriasClinicas() {
+    return this.historiaClinicaRepository.find({ relations: ['paciente'] });
   }
 
-  findAll() {
-    return `This action returns all historiaClinica`;
+  async createHistoriaClinica(CreateHistoriaClinicaDto) {
+    const historiaClinica = this.historiaClinicaRepository.create(
+      CreateHistoriaClinicaDto,
+    );
+    await this.historiaClinicaRepository.save(historiaClinica);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} historiaClinica`;
+  deleteHistoriaClinica(id: number) {
+    this.historiaClinicaRepository.delete(id);
   }
 
-  update(id: number, updateHistoriaClinicaDto: UpdateHistoriaClinicaDto) {
-    return `This action updates a #${id} historiaClinica`;
+  async getHistoriaClinicaById(id: number): Promise<any> {
+    try {
+      return await this.historiaClinicaRepository.findOne({
+        where: { id },
+        relations: ['consultas'],
+      });
+    } catch (error) {
+      return 'No encontrado' + error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} historiaClinica`;
+  async updateHistoriaClinica(
+    id: number,
+    updateHistoriaClinicaDto: UpdateHistoriaClinicaDto,
+  ): Promise<HistoriaClinica> {
+    const historiaClinica = await this.historiaClinicaRepository.findOne({
+      where: { id },
+    });
+    if (!historiaClinica) {
+      throw new Error('HistoriaClinica no encontrada');
+    }
+    const updatedHistoriaClinica = Object.assign(
+      historiaClinica,
+      updateHistoriaClinicaDto,
+    );
+    return this.historiaClinicaRepository.save(updatedHistoriaClinica);
   }
 }

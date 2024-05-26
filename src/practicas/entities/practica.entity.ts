@@ -1,13 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
 import { Medico } from 'src/medicos/entities/medico.entity';
 import { HistoriaClinica } from 'src/historia-clinica/entities/historia-clinica.entity';
+import { BaseEntity } from 'src/common/base-entity';
 
 @Entity()
-export class Practica {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @ManyToOne(() => Medico, (medico) => medico.consultas)
+export class Practica extends BaseEntity {
+  @ManyToOne(() => Medico, (medico) => medico.numeroMatricula)
+  @JoinColumn({ name: 'DoctorID' })
   medico: Medico;
 
   @Column()

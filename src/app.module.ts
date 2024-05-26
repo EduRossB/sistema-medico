@@ -7,6 +7,10 @@ import { ConsultasModule } from './consultas/consultas.module';
 import { PracticasModule } from './practicas/practicas.module';
 import { HistoriaClinicaModule } from './historia-clinica/historia-clinica.module';
 import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { HistoriaClinica } from './historia-clinica/entities/historia-clinica.entity';
+import { Consulta } from './consultas/entities/consulta.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -29,6 +33,9 @@ import { ConfigModule } from '@nestjs/config';
     ConsultasModule,
     PracticasModule,
     HistoriaClinicaModule,
+    UsersModule,
+    AuthModule,
+    TypeOrmModule.forFeature([HistoriaClinica, Consulta]),
   ],
 })
 export class AppModule {}

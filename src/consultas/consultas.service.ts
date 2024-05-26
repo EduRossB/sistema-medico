@@ -3,20 +3,33 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UpdateConsultaDto } from './dto/update-consulta.dto';
 import { Consulta } from './entities/consulta.entity';
+import { HistoriaClinica } from 'src/historia-clinica/entities/historia-clinica.entity';
 
 @Injectable()
 export class ConsultasService {
   constructor(
     @InjectRepository(Consulta)
     private readonly ConsultaRepository: Repository<Consulta>,
+    @InjectRepository(HistoriaClinica)
+    private readonly HistoriaClinicaRepository: Repository<HistoriaClinica>,
   ) {}
   getAllConsultas() {
     return this.ConsultaRepository.find();
   }
 
-  createConsulta(CreateConsultaDto) {
-    const consulta = this.ConsultaRepository.create(CreateConsultaDto);
-    return this.ConsultaRepository.save(consulta);
+  async createConsulta(createConsultaDto): Promise<any> {
+    const historiaClinica = await this.HistoriaClinicaRepository.findOne({
+      where: { id: createConsultaDto.historiaClinicaId },
+      relations: ['consultas'],
+    });
+    if (!historiaClinica) {
+      throw new Error('Historia clinica no encontrada');
+    }
+    const consulta = this.ConsultaRepository.create(createConsultaDto);
+    consulta['historiaClinica'] = historiaClinica;
+
+    const savedConsulta = await this.ConsultaRepository.save(consulta);
+    return savedConsulta;
   }
 
   deleteConsulta(id: number) {

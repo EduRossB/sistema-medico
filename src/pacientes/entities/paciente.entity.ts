@@ -1,10 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity } from 'src/common/base-entity';
+import { HistoriaClinica } from 'src/historia-clinica/entities/historia-clinica.entity';
+import { Column, Entity, OneToOne } from 'typeorm';
 
 @Entity()
-export class Paciente {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Paciente extends BaseEntity {
   @Column()
   DNI: number;
 
@@ -16,4 +15,11 @@ export class Paciente {
 
   @Column()
   nombreObraSocial: string;
+
+  @OneToOne(
+    () => HistoriaClinica,
+    (historiaClinica) => historiaClinica.paciente,
+    { cascade: true },
+  )
+  historiaClinica: HistoriaClinica;
 }
