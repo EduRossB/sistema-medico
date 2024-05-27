@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { EnfermedadesService } from './enfermedades.service';
 import { CreateEnfermedadesDto } from './dto/create-enfermedade.dto';
@@ -21,8 +22,8 @@ export class EnfermedadesController {
   }
 
   @Get()
-  findAll() {
-    return this.enfermedadesService.getAllEnfermedades();
+  async getAllEnfermedades(@Query('texto') texto?: string) {
+    return await this.enfermedadesService.getAllEnfermedades(texto);
   }
 
   @Get(':id')

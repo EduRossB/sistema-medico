@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreatePracticaDto } from './dto/create-practica.dto';
 import { UpdatePracticaDto } from './dto/update-practica.dto';
 import { Practica } from './entities/practica.entity';
 import { HistoriaClinica } from 'src/historia-clinica/entities/historia-clinica.entity';

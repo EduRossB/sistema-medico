@@ -2,11 +2,12 @@ import { Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
 import { HistoriaClinica } from 'src/historia-clinica/entities/historia-clinica.entity';
 import { Medico } from 'src/medicos/entities/medico.entity';
 import { BaseEntity } from 'src/common/base-entity';
+import { Enfermedades } from 'src/enfermedades/entities/enfermedade.entity';
 
 @Entity()
 export class Consulta extends BaseEntity {
-  @ManyToOne(() => Medico, (medico) => medico)
-  @JoinColumn({ name: 'DoctorID' })
+  @ManyToOne(() => Medico, (medico) => medico, { nullable: true })
+  @JoinColumn()
   medico: Medico;
 
   @Column()
@@ -15,8 +16,9 @@ export class Consulta extends BaseEntity {
   @Column()
   motivo: string;
 
-  @Column()
-  diagnosticoEnfermedad: string;
+  @ManyToOne(() => Enfermedades, (enfermedad) => enfermedad)
+  @JoinColumn()
+  diagnosticoEnfermedad: Enfermedades;
 
   @Column()
   diagnosticoConfirmado: boolean;

@@ -11,7 +11,16 @@ export class EnfermedadesService {
     private readonly enfermedadRepository: Repository<Enfermedades>,
   ) {}
 
-  async getAllEnfermedades() {
+  async getAllEnfermedades(texto?: string) {
+    if (texto) {
+      const textoMinuscula = texto.toLowerCase();
+      return await this.enfermedadRepository
+        .createQueryBuilder('enfermedades')
+        .where('LOWER(enfermedades.enfermedad) LIKE :textoMinuscula', {
+          textoMinuscula: `%${textoMinuscula}%`,
+        })
+        .getMany();
+    }
     return await this.enfermedadRepository.find();
   }
   async createEnfermedades(createEnfermedadesDto) {

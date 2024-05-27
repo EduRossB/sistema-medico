@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { UpdateConsultaDto } from './dto/update-consulta.dto';
 import { Consulta } from './entities/consulta.entity';
 import { HistoriaClinica } from 'src/historia-clinica/entities/historia-clinica.entity';
+import { Enfermedades } from 'src/enfermedades/entities/enfermedade.entity';
 
 @Injectable()
 export class ConsultasService {
@@ -12,6 +13,8 @@ export class ConsultasService {
     private readonly ConsultaRepository: Repository<Consulta>,
     @InjectRepository(HistoriaClinica)
     private readonly HistoriaClinicaRepository: Repository<HistoriaClinica>,
+    @InjectRepository(Enfermedades)
+    private readonly EnfermedadRepository: Repository<Enfermedades>,
   ) {}
   async getAllConsultas() {
     return await this.ConsultaRepository.find();
@@ -29,6 +32,16 @@ export class ConsultasService {
     const consulta = this.ConsultaRepository.create(createConsultaDto);
     consulta['historiaClinica'] = historiaClinica;
 
+    if (createConsultaDto.diagnosticoConfirmado) {
+      const enfermedad = await this.EnfermedadRepository.findOne({
+        where: { enfermedad: createConsultaDto.diagnosticoEnfermedad },
+      });
+      if (!enfermedad) {
+        throw new Error('Enfermedad no registrada');
+      }
+      consulta['diagnosticoEnfermedad'] = enfermedad;
+    }
+    console.log(consulta);
     const savedConsulta = await this.ConsultaRepository.save(consulta);
 
     return savedConsulta;
@@ -39,7 +52,10 @@ export class ConsultasService {
   }
 
   async getConsultaById(id: number): Promise<Consulta> {
-    return await this.ConsultaRepository.findOne({ where: { id } });
+    return await this.ConsultaRepository.findOne({
+      where: { id },
+      relations: ['diagnosticoEnfermedad'],
+    });
   }
   async updateConsulta(
     id: number,
